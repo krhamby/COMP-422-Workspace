@@ -1,4 +1,4 @@
-Analysis of the Stable Marriage Problem
+# Analysis of the Stable Marriage Problem
 
 Algorithms:
 
