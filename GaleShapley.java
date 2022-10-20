@@ -137,6 +137,7 @@ class GaleShapley {
             System.exit(1);
         }
 
+        System.out.println("Generating random input of size " + size + "...");
         String[] m = new String[size];
         String[] w = new String[size];
         for (int i = 0; i < size; i++) {
@@ -167,6 +168,7 @@ class GaleShapley {
         }    
 
         GaleShapley gs = new GaleShapley(m, w, mp, wp);
+        System.out.println("Running Gale-Shapley algorithm...");
         double startTime = System.currentTimeMillis();
         gs.findStableMatches();
         double endTime = System.currentTimeMillis();
