@@ -173,4 +173,3 @@ class GaleShapley {
         System.out.println("Time: " + (endTime - startTime) + "ms");
     }
 }
- 
