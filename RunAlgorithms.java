@@ -51,13 +51,13 @@ public class RunAlgorithms {
         long startTime = System.nanoTime();
         gs.findStableMatches();
         long endTime = System.nanoTime();
-        System.out.println("Gale-Shapley Time: " + (endTime - startTime) / 1000000 + "ms");
+        System.out.println("Gale-Shapley Time: " + (endTime - startTime) + " ns");
 
         BruteForce2 bf = new BruteForce2(m, w, mp, wp);
         startTime = System.nanoTime();
         String[] result = bf.isStableSolution();
         endTime = System.nanoTime();
-        System.out.println("Brute Force Time: " + (endTime - startTime) / 1000000 + "ms");
+        System.out.println("Brute Force Time: " + (endTime - startTime) + " ns");
         if (result != null) {
             System.out.println("Brute Force: Stable solution found.");
         } else {
