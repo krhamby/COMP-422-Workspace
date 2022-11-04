@@ -65,7 +65,7 @@ class GaleShapley {
                 }
             }
         }
-        // printPartners();
+        printPartners();
     }
 
     /**
@@ -117,7 +117,7 @@ class GaleShapley {
      */
     private void printPartners() {
         for (int i = 0; i < N; i++) {
-            System.out.println("(" + womenPartners[i] + ", " + listOfWomen[i] + ")");
+            System.out.println("\u001B[36m(" + womenPartners[i] + ", " + listOfWomen[i] + ")\u001B[0m");
         }
     }
 

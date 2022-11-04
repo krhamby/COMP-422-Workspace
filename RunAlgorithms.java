@@ -17,6 +17,9 @@ public class RunAlgorithms {
             System.exit(1);
         }
 
+        // for debugging
+        // size = 4;
+
         System.out.println("Generating random input of size " + size + "...");
         String[] m = new String[size];
         String[] w = new String[size];
@@ -51,26 +54,39 @@ public class RunAlgorithms {
         long startTime = System.nanoTime();
         gs.findStableMatches();
         long endTime = System.nanoTime();
-        System.out.println("Gale-Shapley Time: " + (endTime - startTime) + " ns");
+        System.out.println("Gale-Shapley Time: " + (endTime - startTime) + " ns (" + (endTime - startTime) / 1000000 + " ms)");
 
         BruteForce2 bf = new BruteForce2(m, w, mp, wp);
         startTime = System.nanoTime();
-        String[] result = bf.isStableSolution();
+        String[] result = bf.findStableSolution();
         endTime = System.nanoTime();
-        System.out.println("Brute Force Time: " + (endTime - startTime) + " ns");
+        System.out.println("Brute Force Time: " + (endTime - startTime) + " ns (" + (endTime - startTime) / 1000000 + " ms)");
+
         if (result != null) {
-            System.out.println("Brute Force: Stable solution found.");
+            System.out.println("\u001B[32mBrute Force: stable solution found:\u001B[0m");
+            for (int i = 0; i < result.length; i++) {
+                System.out.println("(" + result[i] + ", " + "W" + (i + 1) + ")");
+            }
         } else {
-            System.out.println("Brute Force: No stable solution found.");
+            System.out.println("\u001B[31mBrute Force: no stable solution found\u001B[0m");
         }
 
-        // if (result != null) {
-        //     System.out.println("Stable solution found:");
-        //     for (int i = 0; i < result.length; i++) {
-        //         System.out.println("W" + (i + 1) + " - " + result[i]);
+        // print preference matrix mp
+        // System.out.println("Preference matrix mp:");
+        // for (int i = 0; i < size; i++) {
+        //     for (int j = 0; j < size; j++) {
+        //         System.out.print(mp[i][j] + " ");
         //     }
-        // } else {
-        //     System.out.println("No stable solution found");
+        //     System.out.println();
+        // }
+
+        // // print preference matrix wp
+        // System.out.println("Preference matrix wp:");
+        // for (int i = 0; i < size; i++) {
+        //     for (int j = 0; j < size; j++) {
+        //         System.out.print(wp[i][j] + " ");
+        //     }
+        //     System.out.println();
         // }
     }
 }

@@ -3,6 +3,7 @@ import java.util.*;
 public class BruteForce2 {
     private final int N;
     private String[] listOfMen;
+    private String[] listOfMen2;
     private String[] listOfWomen;
     private String[] womanPartners;
     private String[][] menPrefs;
@@ -13,6 +14,7 @@ public class BruteForce2 {
     public BruteForce2(String[] listOfMen, String[] listOfWomen, String[][] menPrefs, String[][] womenPrefs) {
         this.N = listOfMen.length;
         this.listOfMen = listOfMen;
+        this.listOfMen2 = listOfMen.clone();
         this.listOfWomen = listOfWomen;
         this.womanPartners = new String[listOfWomen.length];
         this.menPrefs = menPrefs;
@@ -51,49 +53,145 @@ public class BruteForce2 {
         }
     }
 
+    public String[] findStableSolution() {
+        generateAllSolutionSets();
+        for (String[] solutionSet : allSolutionSets) {
+
+            // System.out.println("Current solution set: ");
+            // for (int i = 0; i < N; i++) {
+            //     System.out.println("(" + solutionSet[i] + ", " + "W" + (i + 1) + ")");
+            // }
+
+            if (isStable(solutionSet)) {
+                return solutionSet;
+            }
+        }
+        return null;
+    }
+
+    public boolean isStable(String[] solutionSet) {
+        String currentMan;
+        String currentWoman;
+        String[] womanLikes;
+        String[] womanLikesBetter;
+        String[] manLikes;
+        String[] manLikesBetter;
+
+        for (int i = 0; i < N; i++) {
+            currentMan = solutionSet[i];
+            currentWoman = "W" + (i + 1);
+
+            womanLikes = womenPrefs[i];
+            womanLikesBetter = Arrays.copyOfRange(womanLikes, 0, Arrays.asList(womanLikes).indexOf(currentMan));
+
+            int idx = Arrays.asList(listOfMen2).indexOf(currentMan);
+            manLikes = menPrefs[idx];
+            manLikesBetter = Arrays.copyOfRange(manLikes, 0, Arrays.asList(manLikes).indexOf(currentWoman));
+
+            for (String guy : womanLikesBetter) {
+                String guysGirl = "W" + (Arrays.asList(solutionSet).indexOf(guy) + 1);
+                String[] guyLikes = menPrefs[getMenIndex(guy)];
+                if (Arrays.asList(guyLikes).indexOf(guysGirl) > Arrays.asList(guyLikes).indexOf(currentWoman)) {
+                    return false;
+                }
+            }
+
+            for (String gal : manLikesBetter) {
+                String galsGuy = solutionSet[getWomenIndex(gal)];
+                String[] galLikes = womenPrefs[getWomenIndex(gal)];
+                if (Arrays.asList(galLikes).indexOf(galsGuy) > Arrays.asList(galLikes).indexOf(currentMan)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
 
     public String[] isStableSolution() {
         generateAllSolutionSets();
-        // Collections.reverse(allSolutionSets);
-        // System.out.println("Number of solution sets: " + allSolutionSets.size()); // debugging
-        for (String[] solutionSet: allSolutionSets) {
-            // for a given solutionSet, if a man prefers another woman more than his
-            // current partner, and a woman prefers him more than her current partner,
-            // then the solutionSet is not stable
 
-            // print current pairings for debugging
+        for (String[] solutionSet: allSolutionSets) {
+        
+            // DEBUGGING: print out the current solution set of pairings
+            // System.out.println("Current solution set: ");
             // for (int i = 0; i < N; i++) {
             //     System.out.println("W" + (i + 1) + " - " + solutionSet[i]);
             // }
-            
+
             boolean isStable = true;
             thisCouple: for (int i = 0; i < N; i++) {
-                for (String man : womenPrefs[i]) {
-                    if (getWomanPreference(i, man) < getWomanPreference(i, solutionSet[i])) {
-                        int mansFianceIndex = getFemalePartnerIndex(man, solutionSet);
-                        String femaleName = "W" + (mansFianceIndex + 1); // current fiance
-                        String competingFemaleName = "W" + (i + 1); // current female in couple
-                        int manIndex = Character.getNumericValue(man.toCharArray()[1]);
-                        if (getManPreference(manIndex - 1, femaleName) > getManPreference(manIndex - 1,
-                                competingFemaleName)) {
+                String[] currentWomanPrefs = womenPrefs[i];
+                int currentWomanPrefIndex = getWomanPreference(i, solutionSet[i]);
+
+                String[] currentWomanLikesMore = new String[N - currentWomanPrefIndex];
+
+                // add men who current woman prefers to current partner
+                for (int j = 0; j < N; j++) {
+                    if (j > currentWomanPrefIndex) {
+                        currentWomanLikesMore[j - currentWomanPrefIndex - 1] = currentWomanPrefs[j];
+                    }
+                }
+                
+
+
+                for (String competingMan : currentWomanLikesMore) {
+                    String currentFemaleInCouple = "W" + (i + 1);
+                    String currentMaleInCouple = solutionSet[i];
+
+                    // if the woman likes another man over the current, check if the man likes someone
+                    // else over his
+                    if (getWomanPreference(i, competingMan) > getWomanPreference(i, currentMaleInCouple)) {
+                        int competingWomanIndex = getFemalePartnerIndex(competingMan, solutionSet);
+                        String competingWoman = "W" + (competingWomanIndex + 1);
+                        int competingManIndex = Character.getNumericValue(competingMan.toCharArray()[1]);
+                        if (getManPreference(competingManIndex - 1, competingWoman) > getManPreference(competingManIndex - 1, currentFemaleInCouple)) {
                             isStable = false;
                             break thisCouple;
                         }
                     }
                 }
 
-                for (String woman : menPrefs[getMenIndex(solutionSet[i])]) {
-                    int manIndex = getMenIndex(solutionSet[i]);
-                    if (getManPreference(manIndex, woman) < getManPreference(manIndex, "W" + (i + 1))) {
-                        int index = Character.getNumericValue(woman.toCharArray()[1]);
-                        String maleName = solutionSet[index - 1];
-                        String competingMaleName = solutionSet[i];
-                        if (getWomanPreference(i, maleName) > getWomanPreference(i, competingMaleName)) {
+                // vice versa
+                String[] currentManPrefs = menPrefs[getMenIndex(solutionSet[i])];
+                int currentManPrefIndex = getManPreference(getMenIndex(solutionSet[i]), "W" + (i + 1));
+                String[] currentManLikesMore = new String[N - currentManPrefIndex];
+
+                for (int j = 0; j < N; j++) {
+                    if (j > currentManPrefIndex) {
+                        currentManLikesMore[j - currentManPrefIndex - 1] = currentManPrefs[j];
+                    }
+                }
+
+
+                for (String competingWoman : currentManLikesMore) {
+                    String currentFemaleInCouple = "W" + (i + 1);
+                    String currentMaleInCouple = solutionSet[i];
+
+                    if (getManPreference(i, competingWoman) > getManPreference(i, currentFemaleInCouple)) {
+                        int competingWomanIndex = Character.getNumericValue(competingWoman.toCharArray()[1]) - 1;
+                        String competingMan = solutionSet[competingWomanIndex];
+
+                        if (getWomanPreference(i, competingMan) > getWomanPreference(i, currentMaleInCouple)) {
                             isStable = false;
                             break thisCouple;
                         }
                     }
                 }
+
+                // for (String woman : menPrefs[getMenIndex(solutionSet[i])]) {
+                //     int manIndex = getMenIndex(solutionSet[i]);
+                //     if (getManPreference(manIndex, woman) < getManPreference(manIndex, "W" + (i + 1))) {
+                //         int index = Character.getNumericValue(woman.toCharArray()[1]);
+                //         String maleName = solutionSet[index - 1];
+                //         String competingMaleName = solutionSet[i];
+                //         if (getWomanPreference(i, maleName) > getWomanPreference(i, competingMaleName)) {
+                //             isStable = false;
+                //             break thisCouple;
+                //         }
+                //     }
+                // }
             }
             if (isStable) {
                 return solutionSet;
@@ -163,7 +261,7 @@ private static void  swap(String[] arr, int i, int j) {
      */
     private int getMenIndex(String name) {
         for (int i = 0; i < N; i++) {
-            if (listOfMen[i].equals(name)) {
+            if (listOfMen2[i].equals(name)) {
                 return i;
             }
         }
@@ -204,7 +302,7 @@ private static void  swap(String[] arr, int i, int j) {
         BruteForce2 bf = new BruteForce2(m, w, mp, wp);
 
         long startTime = System.currentTimeMillis();
-        String[] result = bf.isStableSolution();
+        String[] result = bf.findStableSolution();
         long endTime = System.currentTimeMillis();
         System.out.println("Time: " + (endTime - startTime) + "ms");
 
