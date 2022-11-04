@@ -11,13 +11,11 @@ javac RunAlgorithms.java
 
 ## Run
 
-java RunAlgorithms problem_size (problem size larger than 10 will take a long time and most likely exhaust your heap space)
-
-### Note
-
-We will be separating the algorithms in the future to make it easier to run them individually.
+java RunAlgorithms problem_size
+or
+java RunAlgorithms --exclude problem_size (use this to exclude the brute-force algorithm, which will exhaust the heap space for large problem sizes)
 
 ## Troubleshooting
 
 If you run out of heap space, try increasing the heap size: java -Xmx2g RunAlgorithms problem_size.
-This will increase the heap size to 2GB.
+This will increase the heap size to 2GB. Feel free to change this within the constraints of your machine.

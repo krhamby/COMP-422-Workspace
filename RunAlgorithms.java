@@ -2,19 +2,37 @@ import java.util.*;
 
 public class RunAlgorithms {
     public static void main(String[] args) {
-        // check that only 1 argument is passed
-        if (args.length != 1) {
-            System.out.println("Usage: java GaleShapley <size of random input>");
+        boolean exludeBruteForce = false;
+
+        // check that only 1 or 2 arguments are passed
+        if (args.length != 1 && args.length != 2) {
+            System.out.println("Usage: java RunAlgorithms <size of random input>");
+            System.out.println("OR");
+            System.out.println("Usage: java RunAlgorithms --exclude <size of random input>");
             System.exit(1);
         }
 
         // convert argument to int and catch error
         int size = 0;
-        try {
-            size = Integer.parseInt(args[0]);
-        } catch (NumberFormatException e) {
-            System.out.println("Usage: java GaleShapley <size of random input>");
-            System.exit(1);
+        if (args.length == 1) {
+            try {
+                size = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                System.out.println("Usage: java RunAlgorithms <size of random input>");
+                System.exit(1);
+            }
+        } else {
+            try {
+                size = Integer.parseInt(args[1]);
+                if (args[0].equals("--exclude")) {
+                    exludeBruteForce = true;
+                } else {
+                    throw new Exception();
+                }
+            } catch (Exception e) {
+                System.out.println("Usage: java RunAlgorithms --exclude <size of random input>");
+                System.exit(1);
+            }
         }
 
         // for debugging
@@ -45,48 +63,53 @@ public class RunAlgorithms {
                 subMP[j] = w[randM.get(j)];
                 subWP[j] = m[randW.get(j)];
             }
-            
+
             mp[i] = subMP;
             wp[i] = subWP;
-        }    
+        }
 
         GaleShapley gs = new GaleShapley(m, w, mp, wp);
         long startTime = System.nanoTime();
         gs.findStableMatches();
         long endTime = System.nanoTime();
-        System.out.println("Gale-Shapley Time: " + (endTime - startTime) + " ns (" + (endTime - startTime) / 1000000 + " ms)");
+        System.out.println(
+                "Gale-Shapley Time: " + (endTime - startTime) + " ns (" + (endTime - startTime) / 1000000 + " ms)");
+        System.out.println("Gale-Shapley: \u001B[32mstable solution found\u001B[0m\n");
 
-        BruteForce2 bf = new BruteForce2(m, w, mp, wp);
-        startTime = System.nanoTime();
-        String[] result = bf.findStableSolution();
-        endTime = System.nanoTime();
-        System.out.println("Brute Force Time: " + (endTime - startTime) + " ns (" + (endTime - startTime) / 1000000 + " ms)");
+        if (!exludeBruteForce) {
+            BruteForce2 bf = new BruteForce2(m, w, mp, wp);
+            startTime = System.nanoTime();
+            String[] result = bf.findStableSolution();
+            endTime = System.nanoTime();
+            System.out.println(
+                    "Brute Force Time: " + (endTime - startTime) + " ns (" + (endTime - startTime) / 1000000 + " ms)");
 
-        if (result != null) {
-            System.out.println("\u001B[32mBrute Force: stable solution found:\u001B[0m");
-            for (int i = 0; i < result.length; i++) {
-                System.out.println("(" + result[i] + ", " + "W" + (i + 1) + ")");
+            if (result != null) {
+                System.out.println("Brute Force: \u001B[32mstable solution found\u001B[0m");
+                // for (int i = 0; i < result.length; i++) {
+                //     System.out.println("(" + result[i] + ", " + "W" + (i + 1) + ")");
+                // }
+            } else {
+                System.out.println("\u001B[31mBrute Force: no stable solution found\u001B[0m");
             }
-        } else {
-            System.out.println("\u001B[31mBrute Force: no stable solution found\u001B[0m");
         }
 
         // print preference matrix mp
         // System.out.println("Preference matrix mp:");
         // for (int i = 0; i < size; i++) {
-        //     for (int j = 0; j < size; j++) {
-        //         System.out.print(mp[i][j] + " ");
-        //     }
-        //     System.out.println();
+        // for (int j = 0; j < size; j++) {
+        // System.out.print(mp[i][j] + " ");
+        // }
+        // System.out.println();
         // }
 
         // // print preference matrix wp
         // System.out.println("Preference matrix wp:");
         // for (int i = 0; i < size; i++) {
-        //     for (int j = 0; j < size; j++) {
-        //         System.out.print(wp[i][j] + " ");
-        //     }
-        //     System.out.println();
+        // for (int j = 0; j < size; j++) {
+        // System.out.print(wp[i][j] + " ");
+        // }
+        // System.out.println();
         // }
     }
 }

@@ -49,7 +49,7 @@ public class BruteForce2 {
             } else {
                 c[i] = 0;
                 i++;
-            } 
+            }
         }
     }
 
@@ -59,7 +59,7 @@ public class BruteForce2 {
 
             // System.out.println("Current solution set: ");
             // for (int i = 0; i < N; i++) {
-            //     System.out.println("(" + solutionSet[i] + ", " + "W" + (i + 1) + ")");
+            // System.out.println("(" + solutionSet[i] + ", " + "W" + (i + 1) + ")");
             // }
 
             if (isStable(solutionSet)) {
@@ -108,109 +108,18 @@ public class BruteForce2 {
         return true;
     }
 
-
-    public String[] isStableSolution() {
-        generateAllSolutionSets();
-
-        for (String[] solutionSet: allSolutionSets) {
-        
-            // DEBUGGING: print out the current solution set of pairings
-            // System.out.println("Current solution set: ");
-            // for (int i = 0; i < N; i++) {
-            //     System.out.println("W" + (i + 1) + " - " + solutionSet[i]);
-            // }
-
-            boolean isStable = true;
-            thisCouple: for (int i = 0; i < N; i++) {
-                String[] currentWomanPrefs = womenPrefs[i];
-                int currentWomanPrefIndex = getWomanPreference(i, solutionSet[i]);
-
-                String[] currentWomanLikesMore = new String[N - currentWomanPrefIndex];
-
-                // add men who current woman prefers to current partner
-                for (int j = 0; j < N; j++) {
-                    if (j > currentWomanPrefIndex) {
-                        currentWomanLikesMore[j - currentWomanPrefIndex - 1] = currentWomanPrefs[j];
-                    }
-                }
-                
-
-
-                for (String competingMan : currentWomanLikesMore) {
-                    String currentFemaleInCouple = "W" + (i + 1);
-                    String currentMaleInCouple = solutionSet[i];
-
-                    // if the woman likes another man over the current, check if the man likes someone
-                    // else over his
-                    if (getWomanPreference(i, competingMan) > getWomanPreference(i, currentMaleInCouple)) {
-                        int competingWomanIndex = getFemalePartnerIndex(competingMan, solutionSet);
-                        String competingWoman = "W" + (competingWomanIndex + 1);
-                        int competingManIndex = Character.getNumericValue(competingMan.toCharArray()[1]);
-                        if (getManPreference(competingManIndex - 1, competingWoman) > getManPreference(competingManIndex - 1, currentFemaleInCouple)) {
-                            isStable = false;
-                            break thisCouple;
-                        }
-                    }
-                }
-
-                // vice versa
-                String[] currentManPrefs = menPrefs[getMenIndex(solutionSet[i])];
-                int currentManPrefIndex = getManPreference(getMenIndex(solutionSet[i]), "W" + (i + 1));
-                String[] currentManLikesMore = new String[N - currentManPrefIndex];
-
-                for (int j = 0; j < N; j++) {
-                    if (j > currentManPrefIndex) {
-                        currentManLikesMore[j - currentManPrefIndex - 1] = currentManPrefs[j];
-                    }
-                }
-
-
-                for (String competingWoman : currentManLikesMore) {
-                    String currentFemaleInCouple = "W" + (i + 1);
-                    String currentMaleInCouple = solutionSet[i];
-
-                    if (getManPreference(i, competingWoman) > getManPreference(i, currentFemaleInCouple)) {
-                        int competingWomanIndex = Character.getNumericValue(competingWoman.toCharArray()[1]) - 1;
-                        String competingMan = solutionSet[competingWomanIndex];
-
-                        if (getWomanPreference(i, competingMan) > getWomanPreference(i, currentMaleInCouple)) {
-                            isStable = false;
-                            break thisCouple;
-                        }
-                    }
-                }
-
-                // for (String woman : menPrefs[getMenIndex(solutionSet[i])]) {
-                //     int manIndex = getMenIndex(solutionSet[i]);
-                //     if (getManPreference(manIndex, woman) < getManPreference(manIndex, "W" + (i + 1))) {
-                //         int index = Character.getNumericValue(woman.toCharArray()[1]);
-                //         String maleName = solutionSet[index - 1];
-                //         String competingMaleName = solutionSet[i];
-                //         if (getWomanPreference(i, maleName) > getWomanPreference(i, competingMaleName)) {
-                //             isStable = false;
-                //             break thisCouple;
-                //         }
-                //     }
-                // }
-            }
-            if (isStable) {
-                return solutionSet;
-            }
-        }
-        return null;
-    }
-        
-private static void  swap(String[] arr, int i, int j) {
+    private static void swap(String[] arr, int i, int j) {
         String temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
     }
 
-   /**
-     * Returns a given woman's preference ranking (index) 
+    /**
+     * Returns a given woman's preference ranking (index)
      * for a given man
+     * 
      * @param index - the index value of the woman
-     * @param name - name of the man whose preference ranking is being found
+     * @param name  - name of the man whose preference ranking is being found
      * @return index representing the index (and therefore ranking) of the man
      */
     private int getWomanPreference(int index, String name) {
@@ -242,6 +151,7 @@ private static void  swap(String[] arr, int i, int j) {
 
     /**
      * Finds the index of a woman based on their name
+     * 
      * @param name - the name of the woman
      * @return index of woman based on their name
      */
@@ -256,6 +166,7 @@ private static void  swap(String[] arr, int i, int j) {
 
     /**
      * Finds the index of a man based on their name
+     * 
      * @param name - the name of the man
      * @return index of man based on their name
      */
@@ -271,10 +182,10 @@ private static void  swap(String[] arr, int i, int j) {
     public static void main(String[] args) {
         System.out.println("Brute-Force Marriage Algorithm\n");
         /** list of men **/
-        String[] m = {"M1", "M2"};
+        String[] m = { "M1", "M2" };
         /** list of women **/
-        String[] w = {"W1", "W2"};
- 
+        String[] w = { "W1", "W2" };
+
         /** men preference **/
         String[][] mp = { { "W1", "W2" },
                 { "W2", "W1" } };
@@ -285,19 +196,19 @@ private static void  swap(String[] arr, int i, int j) {
         // String[] m = {"M1", "M2", "M3", "M4", "M5"};
         // /** list of women **/
         // String[] w = {"W1", "W2", "W3", "W4", "W5"};
- 
+
         // /** men preference **/
-        // String[][] mp = {{"W5", "W2", "W3", "W4", "W1"}, 
-        //                  {"W2", "W5", "W1", "W3", "W4"}, 
-        //                  {"W4", "W3", "W2", "W1", "W5"}, 
-        //                  {"W1", "W2", "W3", "W4", "W5"},
-        //                  {"W5", "W2", "W3", "W4", "W1"}};
-        // /** women preference **/                      
-        // String[][] wp = {{"M5", "M3", "M4", "M1", "M2"}, 
-        //                  {"M1", "M2", "M3", "M5", "M4"}, 
-        //                  {"M4", "M5", "M3", "M2", "M1"},
-        //                  {"M5", "M2", "M1", "M4", "M3"}, 
-        //                  {"M2", "M1", "M4", "M3", "M5"}};
+        // String[][] mp = {{"W5", "W2", "W3", "W4", "W1"},
+        // {"W2", "W5", "W1", "W3", "W4"},
+        // {"W4", "W3", "W2", "W1", "W5"},
+        // {"W1", "W2", "W3", "W4", "W5"},
+        // {"W5", "W2", "W3", "W4", "W1"}};
+        // /** women preference **/
+        // String[][] wp = {{"M5", "M3", "M4", "M1", "M2"},
+        // {"M1", "M2", "M3", "M5", "M4"},
+        // {"M4", "M5", "M3", "M2", "M1"},
+        // {"M5", "M2", "M1", "M4", "M3"},
+        // {"M2", "M1", "M4", "M3", "M5"}};
 
         BruteForce2 bf = new BruteForce2(m, w, mp, wp);
 

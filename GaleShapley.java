@@ -65,7 +65,7 @@ class GaleShapley {
                 }
             }
         }
-        printPartners();
+        // printPartners();
     }
 
     /**
@@ -116,6 +116,7 @@ class GaleShapley {
      * Prints out each partner. Only used for testing purposes.
      */
     private void printPartners() {
+        System.out.println("u001B[32mGale-Shapley: stable solution found:\u001B[0m");
         for (int i = 0; i < N; i++) {
             System.out.println("\u001B[36m(" + womenPartners[i] + ", " + listOfWomen[i] + ")\u001B[0m");
         }
