@@ -94,17 +94,19 @@ public class RunAlgorithms {
             long endTime = System.nanoTime();
             totalTimeGS += endTime - startTime;
             System.out.println("Iteration " + (i + 1) + " (GS): " + (endTime - startTime) + " ns");
+            System.out.println(totalTimeGS);
 
             if (!exludeBruteForce) {
-                totalTimeGS = 0;
                 BruteForce2 bf = new BruteForce2(run.listOfMen, run.listOfWomen, run.menPrefs, run.womenPrefs);
                 startTime = System.nanoTime();
-                String[] result = bf.findStableSolution();
+                // String[] result = bf.findStableSolution();
+                boolean result = bf.generateAllSolutionSets();
                 endTime = System.nanoTime();
                 totalTimeBF += endTime - startTime;
                 System.out.println("Iteration " + (i + 1) + " (BF): " + (endTime - startTime) + " ns");
+                System.out.println(totalTimeBF);
 
-                if (result != null) {
+                if (result) {
                     System.out.println("Brute Force: \u001B[32mstable solution found\u001B[0m");
                     // for (int i = 0; i < result.length; i++) {
                     // System.out.println("(" + result[i] + ", " + "W" + (i + 1) + ")");

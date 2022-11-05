@@ -22,7 +22,7 @@ public class BruteForce2 {
         this.allSolutionSets = new ArrayList<String[]>();
     }
 
-    private void generateAllSolutionSets() {
+    public boolean generateAllSolutionSets() {
         // use heap's algorithm to generate all permutations
 
         // initialize the array
@@ -32,7 +32,11 @@ public class BruteForce2 {
         }
 
         // add the first permutation
-        allSolutionSets.add(listOfMen.clone());
+        // allSolutionSets.add(listOfMen.clone());
+
+        if (isStable(listOfMen.clone())) {
+            return true;
+        }
 
         int i = 1;
         while (i < N) {
@@ -43,7 +47,12 @@ public class BruteForce2 {
                     swap(listOfMen, c[i], i);
                 }
                 // add the current permutation to the list of all solution sets
-                allSolutionSets.add(listOfMen.clone());
+                // allSolutionSets.add(listOfMen.clone());
+
+                if (isStable(listOfMen.clone())) {
+                    return true;
+                }
+
                 c[i]++;
                 i = 1;
             } else {
@@ -51,6 +60,7 @@ public class BruteForce2 {
                 i++;
             }
         }
+        return false;
     }
 
     public String[] findStableSolution() {
