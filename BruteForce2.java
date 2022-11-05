@@ -63,21 +63,21 @@ public class BruteForce2 {
         return false;
     }
 
-    public String[] findStableSolution() {
-        generateAllSolutionSets();
-        for (String[] solutionSet : allSolutionSets) {
+    // deprecated
+    // public String[] findStableSolution() {
+    //     generateAllSolutionSets();
+    //     for (String[] solutionSet : allSolutionSets) {
+    //         // System.out.println("Current solution set: ");
+    //         // for (int i = 0; i < N; i++) {
+    //         // System.out.println("(" + solutionSet[i] + ", " + "W" + (i + 1) + ")");
+    //         // }
 
-            // System.out.println("Current solution set: ");
-            // for (int i = 0; i < N; i++) {
-            // System.out.println("(" + solutionSet[i] + ", " + "W" + (i + 1) + ")");
-            // }
-
-            if (isStable(solutionSet)) {
-                return solutionSet;
-            }
-        }
-        return null;
-    }
+    //         if (isStable(solutionSet)) {
+    //             return solutionSet;
+    //         }
+    //     }
+    //     return null;
+    // }
 
     public boolean isStable(String[] solutionSet) {
         String currentMan;
@@ -223,18 +223,18 @@ public class BruteForce2 {
         BruteForce2 bf = new BruteForce2(m, w, mp, wp);
 
         long startTime = System.currentTimeMillis();
-        String[] result = bf.findStableSolution();
+        boolean result = bf.generateAllSolutionSets();
         long endTime = System.currentTimeMillis();
         System.out.println("Time: " + (endTime - startTime) + "ms");
 
         // String[] result = bf.isStableSolution();
-        if (result != null) {
-            System.out.println("Stable solution found:");
-            for (int i = 0; i < result.length; i++) {
-                System.out.println("W" + (i + 1) + " - " + result[i]);
-            }
-        } else {
-            System.out.println("No stable solution found");
-        }
+        // if (result != null) {
+        //     System.out.println("Stable solution found:");
+        //     for (int i = 0; i < result.length; i++) {
+        //         System.out.println("W" + (i + 1) + " - " + result[i]);
+        //     }
+        // } else {
+        //     System.out.println("No stable solution found");
+        // }
     }
 }
