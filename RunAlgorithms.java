@@ -13,6 +13,9 @@ public class RunAlgorithms {
         this.size = size;
     }
 
+    /**
+     * Generate a random list of men and women, and two matrices of their preferences
+     */
     public void generateRandomInput() {
         listOfMen = new String[size];
         listOfWomen = new String[size];
