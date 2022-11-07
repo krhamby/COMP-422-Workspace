@@ -13,7 +13,7 @@ javac RunAlgorithms.java
 
 java RunAlgorithms problem_size
 or
-java RunAlgorithms --exclude problem_size (use this to exclude the brute-force algorithm, which will exhaust the heap space for large problem sizes)
+java RunAlgorithms --exclude problem_size (use this to exclude the brute-force algorithm, which run until the heat death of the universe for any considerable problem size)
 
 ## Troubleshooting
 

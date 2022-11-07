@@ -88,6 +88,7 @@ public class RunAlgorithms {
         for (int i = 0; i < 10; i++) {
             run.generateRandomInput();
 
+            // initialize Gale-Shapley object and run algorithm
             GaleShapley gs = new GaleShapley(run.listOfMen, run.listOfWomen, run.menPrefs, run.womenPrefs);
             long startTime = System.nanoTime();
             gs.findStableMatches();
@@ -95,6 +96,7 @@ public class RunAlgorithms {
             totalTimeGS += endTime - startTime;
             System.out.println("Iteration " + (i + 1) + " (GS): " + (endTime - startTime) + " ns");
 
+            // if not excluding brute force, initialize BruteForce object and run algorithm
             if (!exludeBruteForce) {
                 BruteForce2 bf = new BruteForce2(run.listOfMen, run.listOfWomen, run.menPrefs, run.womenPrefs);
                 startTime = System.nanoTime();
@@ -104,11 +106,9 @@ public class RunAlgorithms {
                 totalTimeBF += endTime - startTime;
                 System.out.println("Iteration " + (i + 1) + " (BF): " + (endTime - startTime) + " ns");
 
+                // check that results exist because of previous issues (should be fixed)
                 if (result) {
                     System.out.println("Brute Force: \u001B[32mstable solution found\u001B[0m");
-                    // for (int i = 0; i < result.length; i++) {
-                    // System.out.println("(" + result[i] + ", " + "W" + (i + 1) + ")");
-                    // }
                 } else {
                     System.out.println("\u001B[31mBrute Force: no stable solution found\u001B[0m");
                 }
@@ -118,23 +118,5 @@ public class RunAlgorithms {
         if (!exludeBruteForce) {
             System.out.println("Avg. time for 10 iterations of Brute Force for problem size " + size + ": " + totalTimeBF / 10 + " ns");
         }
-
-        // print preference matrix mp
-        // System.out.println("Preference matrix mp:");
-        // for (int i = 0; i < size; i++) {
-        // for (int j = 0; j < size; j++) {
-        // System.out.print(mp[i][j] + " ");
-        // }
-        // System.out.println();
-        // }
-
-        // // print preference matrix wp
-        // System.out.println("Preference matrix wp:");
-        // for (int i = 0; i < size; i++) {
-        // for (int j = 0; j < size; j++) {
-        // System.out.print(wp[i][j] + " ");
-        // }
-        // System.out.println();
-        // }
     }
 }
